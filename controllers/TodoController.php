@@ -119,6 +119,38 @@ class TodoController extends Controller
     }
 
     /**
+     * Toggles the is_done status of a Todo via AJAX.
+     * @return \yii\web\Response
+     */
+    public function actionToggle()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        
+        if (!$this->request->isPost) {
+            return ['success' => false, 'message' => 'Invalid request method'];
+        }
+        
+        $id = $this->request->post('id');
+        $status = $this->request->post('status');
+        
+        if ($id === null || $status === null) {
+            return ['success' => false, 'message' => 'Missing parameters'];
+        }
+        
+        $model = Todo::findOne($id);
+        if (!$model) {
+            return ['success' => false, 'message' => 'Todo not found'];
+        }
+        
+        $model->is_done = (int)$status;
+        if ($model->save()) {
+            return ['success' => true, 'message' => 'Status updated successfully'];
+        } else {
+            return ['success' => false, 'message' => 'Failed to update status'];
+        }
+    }
+
+    /**
      * Finds the Todo model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id ID

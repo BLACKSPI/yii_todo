@@ -33,3 +33,6 @@ tests/_support/_generated
 /.vagrant
 
 /config/db-local.php
+
+# runtime files (database, cache, logs)
+/runtime/
